@@ -32,7 +32,7 @@ let baseMaps = {
 // Create the map object with a center and zoom level.
 //let map = L.map('mapid').setView([30, 30], 2);
 let map = L.map("mapid", {
-    center: [30, 30],
+    center: [44, -80],
     zoom: 2,
     layers: [streets]
 });
@@ -44,20 +44,35 @@ L.control.layers(baseMaps).addTo(map);
 
 
 // Accessing the airport GeoJSON URL
-let airportData = "https://raw.githubusercontent.com/briane2k/MappingEarthquakes_JS_API/main/Mapping_Earthquakes/majorAirports.json";
+let torontoData = "https://raw.githubusercontent.com/briane2k/MappingEarthquakes_JS_API/main/Mapping_GeoJSON_Linestrings/torontoRoutes.json";
+
+// Create a style for the lines.
+let myStyle = {
+    color: "#ffffa1",
+    weight: 2
+}
 
 // Grabbing our GeoJSON data.
-d3.json(airportData).then(function(data) {
-    //    console.log(data);
-        // Creating a GeoJSON layer with the retrieved data.
-        L.geoJSON(data, {
-                onEachFeature: function(feature, layer) {
-                    console.log(feature);
-                    layer.bindPopup("<h2>Airport code: " + feature.properties.faa + "</h2><HR><h3>Airport name: "+feature.properties.name);
-                    //.bindPopup("<h2>Airport code: " + data.properties.faa + "</h2><HR><h3>Airport name: "+data.properties.name)
-                }
-            }).addTo(map);
-    });
-    //.bindPopup("<h2>Airport code: " + feature.properties.faa + "</h2><HR><h3>Airport name: "+feature.properties.name)
+d3.json(torontoData).then(function(data) {
+    //console.log(data);
+// Creating a GeoJSON layer with the retrieved data.
+    L.geoJSON(data,{
+        style: myStyle,
+        onEachFeature: function(feature, layer) {
+            layer.bindPopup("<h3> Airline: "+feature.properties.airline+"</h3><hr><h3>Destination: "+feature.properties.dst+"</h3>");
+        }
+    })
+    .addTo(map);
+});
     
     //eof
+
+
+
+    // , {
+    //     onEachFeature: function(feature, layer) {
+    //         console.log(feature);
+    //         layer.bindPopup("<h2>Airport code: " + feature.properties.faa + "</h2><HR><h3>Airport name: "+feature.properties.name);
+    //         //.bindPopup("<h2>Airport code: " + data.properties.faa + "</h2><HR><h3>Airport name: "+data.properties.name)
+    //     }
+    // }
